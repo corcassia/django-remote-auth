@@ -17,7 +17,8 @@ Quick Start Guide
 
 Add `remote_auth` to your `settings.py`
 
-.. code::python
+```python
+
     INSTALLED_APPS = [
         '...',
         'remote_auth',
@@ -48,3 +49,4 @@ Add `remote_auth` to your `settings.py`
     AUTHENTICATION_BACKENDS = [
         'remote_auth.backends.CustomModelBackend',
     ]
+```
