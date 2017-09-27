@@ -11,21 +11,18 @@ def read(fname):
     return codecs.open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
-def readme():
-    return read("./README.md")
-
-VERSION = "0.0.1"
+VERSION = "0.0.6"
 
 setup(
-    name='remote_auth',
+    name='remote-auth',
     version=VERSION,
     description='Provide multiple Django Auth support to a project',
-    long_description=readme().strip(),
+    long_description="Provide multiple Django Auth support to a project",
     author='mymusise',
     author_email='mymusise1@gmail.com',
-    url='https://github.com/mymusise/django-view-limiter',
+    url='https://github.com/mymusise/django-remote-auth',
     license='MIT',
-    packages=find_packages(),
+    packages=['remote_auth'],
     install_requires=[],
     keywords='remote multi default django auth',
     classifiers=[
@@ -39,8 +36,5 @@ setup(
         'Topic :: Software Development'
     ],
     include_package_data=True,
-    package_data={
-        '': ['.README.md']
-    },
     zip_safe=False,
 )
