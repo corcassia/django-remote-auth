@@ -17,5 +17,5 @@ class SessionStore(SourceSessionStore):
         session_data = super(SessionStore, self).load()
         if '_auth_user_backend' in session_data:
             session_data['_auth_user_backend'] = '%s.backends.CustomModelBackend' % auth_settings.REMOTE_AUTH_APP
-        print("session_data", session_data)
+
         return session_data

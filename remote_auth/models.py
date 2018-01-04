@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractUser, UserManager, GroupManager, PermissionManager
+from django.contrib.auth.models import UserManager, GroupManager, PermissionManager
+from django.contrib.auth.models import AbstractUser as DjangoAbstractUser
 from django.contrib.contenttypes.models import ContentType, ContentTypeManager
 from django.contrib.sessions.models import SessionManager
 from django.contrib.sessions.base_session import AbstractBaseSession
@@ -130,51 +131,39 @@ class GroupPermissions(models.Model):
         unique_together = (('group', 'permission'),)
 
 
-class User(AbstractUser):
-    # backend = 
-    objects = UserManager()
+class AbstractUser(DjangoAbstractUser):
+
     groups = models.ManyToManyField(
         Group,
-        through='UserGroups',
-        through_fields=('user', 'group'),
-        related_name='+',
+        verbose_name=_('groups'),
         blank=True,
+        help_text=_(
+            'The groups this user belongs to. A user will get all permissions '
+            'granted to each of their groups.'
+        ),
+        related_name="user_set",
+        related_query_name="user",
     )
     user_permissions = models.ManyToManyField(
         Permission,
         verbose_name=_('user permissions'),
-        through='UserUserPermissions',
-        through_fields=('user', 'permission'),
         blank=True,
-        related_name="+",
+        help_text=_('Specific permissions for this user.'),
+        related_name="user_set",
+        related_query_name="user",
     )
 
     class Meta:
+        abstract = True
+
+
+class User(AbstractUser):
+
+    class Meta(AbstractUser.Meta):
         app_label = _app_label
         db_table = 'auth_user'
         managed = False
-
-
-class UserGroups(models.Model):
-    user = models.ForeignKey(User, models.DO_NOTHING)
-    group = models.ForeignKey(Group, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_groups'
-        app_label = _app_label
-        unique_together = (('user', 'group'),)
-
-
-class UserUserPermissions(models.Model):
-    user = models.ForeignKey(User, models.DO_NOTHING)
-    permission = models.ForeignKey(Permission, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_user_permissions'
-        app_label = _app_label
-        unique_together = (('user', 'permission'),)
+        swappable = 'REMOTE_AUTH_USER_MODEL'
 
 
 class Session(AbstractBaseSession):

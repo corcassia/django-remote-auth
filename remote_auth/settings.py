@@ -3,6 +3,7 @@ from django.conf import settings
 
 DEFAULTS = {
     'REMOTE_AUTH_APP': 'remote_auth',
+    'AUTHENTICATION_BACKENDS': [],
 }
 
 
