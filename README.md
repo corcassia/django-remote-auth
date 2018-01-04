@@ -49,4 +49,24 @@ Add `remote_auth` to your `settings.py`
     AUTHENTICATION_BACKENDS = [
         'remote_auth.backends.CustomModelBackend',
     ]
+
+    DATABASE_ROUTERS = ['mysite.db_router.RemoteRouter']
 ```
+
+And you should add a db route for your remote database, for example:
+```python
+class RemoteRouter(object):
+
+    def db_for_read(self, model, **hints):
+        # ...
+        if model._meta.app_label == 'remote_auth':
+            return 'remote_auth'
+        # ...
+
+    def db_for_write(self, model, **hints):
+        # ...
+        if model._meta.app_label == 'remote_auth':
+            return 'remote_auth'
+        # ...
+```
+
